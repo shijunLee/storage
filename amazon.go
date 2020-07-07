@@ -18,6 +18,7 @@ package storage
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	pathutil "path"
 	"strings"
@@ -82,6 +83,9 @@ func NewAmazonS3BackendWithCredentials(bucket string, prefix string, region stri
 func (b AmazonS3Backend) ListObjects(prefix string) ([]Object, error) {
 	var objects []Object
 	prefix = pathutil.Join(b.Prefix, prefix)
+	if prefix!=""{
+		prefix=fmt.Sprintf("%s/",prefix)
+	}
 	s3Input := &s3.ListObjectsInput{
 		Bucket: aws.String(b.Bucket),
 		Prefix: aws.String(prefix),
