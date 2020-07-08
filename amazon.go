@@ -83,6 +83,7 @@ func NewAmazonS3BackendWithCredentials(bucket string, prefix string, region stri
 func (b AmazonS3Backend) ListObjects(prefix string) ([]Object, error) {
 	var objects []Object
 	prefix = pathutil.Join(b.Prefix, prefix)
+	pathPrefix:=prefix
 	if prefix!=""{
 		prefix=fmt.Sprintf("%s/",prefix)
 	}
@@ -95,8 +96,9 @@ func (b AmazonS3Backend) ListObjects(prefix string) ([]Object, error) {
 		if err != nil {
 			return objects, err
 		}
+
 		for _, obj := range s3Result.Contents {
-			path := removePrefixFromObjectPath(prefix, *obj.Key)
+			path := removePrefixFromObjectPath(pathPrefix, *obj.Key)
 			if objectPathIsInvalid(path) {
 				continue
 			}
